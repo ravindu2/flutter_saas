@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "489983098823",
+    "project_id": "fluttersaas-5349f",
+    "storage_bucket": "fluttersaas-5349f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489983098823:android:b3828f882dd0814b8263e2",
+        "android_client_info": {
+          "package_name": "com.example.flutter_saas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoyqNtYFPDfbNTd8w0Q_8fflvugZ6e-Sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
