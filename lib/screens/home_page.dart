@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_saas/widgets/image_preview.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
@@ -115,6 +116,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //copy to clipboard
+
+  void _copyCliboard() async {
+    if (recognizedText.isNotEmpty) {
+      await Clipboard.setData(
+        ClipboardData(text: recognizedText),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Text copied to clipboard"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,7 +217,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: _copyCliboard,
                       icon: const Icon(
                         Icons.copy,
                         size: 20,
@@ -215,10 +231,12 @@ class _HomePageState extends State<HomePage> {
                   child: Scrollbar(
                     child: Row(
                       children: [
-                        SelectableText(
-                          recognizedText.isEmpty
-                              ? "No Text recognized"
-                              : recognizedText,
+                        Flexible(
+                          child: SelectableText(
+                            recognizedText.isEmpty
+                                ? "No Text recognized"
+                                : recognizedText,
+                          ),
                         ),
                       ],
                     ),
