@@ -21,7 +21,7 @@ class ImagePreview extends StatelessWidget {
           )),
       child: imagePath == null
           ? const Center(
-              child: Icon(Icons.image),
+              child: Icon(Icons.image, size: 300,),
             )
           : Image.file(
               File(imagePath!),
