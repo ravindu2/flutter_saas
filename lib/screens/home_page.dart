@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_saas/services/stor_convercions_firestore.dart';
 import 'package:flutter_saas/widgets/image_preview.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
@@ -62,6 +65,18 @@ class _HomePageState extends State<HomePage> {
       for (TextBlock block in textReturnedFrommodel.blocks) {
         for (TextLine line in block.lines) {
           recognizedText += "${line.text}\n";
+        }
+      }
+
+      if (recognizedText.isNotEmpty) {
+        try {
+          await StorConvercionsFirestore().storeConvercionData(
+              conversionData: recognizedText,
+              conversionDate: DateTime.now(),
+              imageFile: File(pikedImagePath!),
+              );
+        } catch (error) {
+          print(error);
         }
       }
     } catch (error) {

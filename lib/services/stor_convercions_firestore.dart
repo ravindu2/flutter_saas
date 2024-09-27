@@ -4,12 +4,12 @@ import 'package:flutter_saas/model/conversion_model.dart';
 import 'package:flutter_saas/services/store_convercions_storage.dart';
 
 class StorConvercionsFirestore {
-  final FirebaseFirestore _firebaseStorage = FirebaseFirestore.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<void> storeConvercionData({
-    required conversionData,
-    required conversionDate,
+    required String conversionData,
+    required DateTime conversionDate,
     required imageFile,
   }) async {
     try {
@@ -18,14 +18,16 @@ class StorConvercionsFirestore {
       }
 
       final userId = _firebaseAuth.currentUser!.uid;
+      print("Storing data for user: $userId");
 
+      // Uploading the image
       final String imageUrl = await StoreConvercionsStorage().uploadImage(
         conversionImage: imageFile,
         userId: userId,
       );
+      print("Image uploaded to: $imageUrl");
 
-      CollectionReference conversion = _firebaseStorage.collection("conversions");
-
+      // Creating conversion model
       final ConversionModel conversionModel = ConversionModel(
         userId: userId,
         conversionData: conversionData,
@@ -33,11 +35,36 @@ class StorConvercionsFirestore {
         imageUrl: imageUrl,
       );
 
-      await conversion.add(conversionModel.toJson());
-
-      print("data stored");
+      // Storing conversion model in Firestore
+      await _firebaseFirestore.collection("conversions").add(conversionModel.toJson());
+      print("Data stored successfully.");
     } catch (error) {
-      print("Error from firestore:$error");
+      print("Error storing conversion data: $error");
+    }
+  }
+
+  // Fetch user conversion data with error handling
+  Stream<List<ConversionModel>> getUserConversion() {
+    final userId = _firebaseAuth.currentUser?.uid;
+
+    if (userId == null) {
+      print("Error: No user is currently signed in.");
+      return Stream.empty(); // Return an empty stream
+    }
+
+    try {
+      return _firebaseFirestore
+          .collection("conversions")
+          .where("userId", isEqualTo: userId)
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs.map((doc) {
+          return ConversionModel.fromJson(doc.data() as Map<String, dynamic>);
+        }).toList();
+      });
+    } catch (error) {
+      print("Error fetching user conversions: $error");
+      return Stream.empty(); // Return an empty stream on error
     }
   }
 }
