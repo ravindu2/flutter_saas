@@ -34,7 +34,8 @@ class UserHistory extends StatelessWidget {
           itemCount: userConversion.length,
           itemBuilder: (context, index) {
             final ConversionModel conversion = userConversion[index];
-            final String? conversionData = conversion.conversionData; // Local variable
+            final String? conversionData =
+                conversion.conversionData; // Local variable
 
             print("Displaying conversion: $conversionData");
 
@@ -49,7 +50,8 @@ class UserHistory extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (conversion.imageUrl != null && conversion.imageUrl!.isNotEmpty)
+                    if (conversion.imageUrl != null &&
+                        conversion.imageUrl!.isNotEmpty)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
@@ -80,8 +82,13 @@ class UserHistory extends StatelessWidget {
                         Expanded(
                           child: Text(
                             conversionData != null && conversionData.isNotEmpty
-                                ? conversionData
+                                ? (conversionData.length > 200
+                                    ? "${conversionData.substring(0, 200)}..." // Interpolation used here
+                                    : conversionData)
                                 : "No conversion data available",
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                         IconButton(
